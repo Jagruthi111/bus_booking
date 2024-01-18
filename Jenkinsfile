@@ -1,10 +1,10 @@
 pipeline {
     agent {
-        label 'king'
+        label 'slave3'
     }
 
     environment {
-        TOMCAT_HOST = '172.31.3.184'
+        TOMCAT_HOST = '172.31.2.55'
         TOMCAT_USER = 'root'
         TOMCAT_DIR = '/opt/apache-tomcat-8.5.98/webapps'
         JAR_FILE = 'bus-booking-app-1.0-SNAPSHOT.jar'  // Replace with the actual name of your JAR file
