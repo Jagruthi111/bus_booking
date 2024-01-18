@@ -31,7 +31,7 @@ pipeline {
         stage('Run JAR') {
             steps {
                 script {
-                    sh "java -jar target/${JAR_FILE}"
+                    sh "java -jar target/bus-booking-app-1.0-SNAPSHOT.jar"
                 }
             }
         }
