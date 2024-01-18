@@ -1,14 +1,14 @@
+
 pipeline {
     agent {
         label 'slave01'
     }
 
-    // environment {
-    //    TOMCAT_HOST = '172.31.2.55'
-    //    TOMCAT_USER = 'root'
-    //    TOMCAT_DIR = '/opt/apache-tomcat-8.5.98/webapps'
-    //    JAR_FILE = 'bus-booking-app-1.0-SNAPSHOT.jar'  
-    //    }
+    environment {
+        MAVEN_HOME = tool 'Maven'
+        //SPRING_PROFILES_ACTIVE = 'local'  
+    }
+
 
     stages {
         stage('checkout') {
@@ -21,9 +21,7 @@ pipeline {
         stage('build') {
             steps {
                 script {
-                    def mvnHome = tool 'Maven'
-                    def mvnCMD = "${mvnHome}/bin/mvn"
-                    sh "${mvnCMD} clean install"
+                     sh "${MAVEN_HOME}/bin/mvn clean package"
                 }
             }
         }
@@ -31,7 +29,8 @@ pipeline {
         stage('Run JAR') {
             steps {
                 script {
-                    sh "java -jar target/bus-booking-app-1.0-SNAPSHOT.jar"
+                    sh "java -jar target/bus-booking-app-1.0-SNAPSHOT.jar&"
+		    sleep 30
                 }
             }
         }
