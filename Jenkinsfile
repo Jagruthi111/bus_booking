@@ -44,5 +44,22 @@ pipeline {
             }
         }
     }
-
+post {
+    success {
+	   rtUpload (
+                        serverId: 'Artifact',
+                        spec: '''{
+                            "files": [
+                                {
+                                    "pattern": "target/*.jar",
+                                    "target": "libs-release-local/"
+                                }
+                            ]
+                        }'''
+                    ) 
+    }
+  }
 }
+
+
+
