@@ -32,8 +32,6 @@ pipeline {
                 }
             }
         }
-
-    }
 stage('Deploy to JFrog Artifactory') {
             steps {
                 script {
