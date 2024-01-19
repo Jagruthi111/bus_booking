@@ -73,6 +73,3 @@ stage('Deploy to JFrog Artifactory') {
             }
         }
     }
-
-
-
