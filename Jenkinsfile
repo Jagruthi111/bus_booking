@@ -1,4 +1,3 @@
-
 pipeline {
     agent {
         label 'slave01'
@@ -8,8 +7,7 @@ pipeline {
         MAVEN_HOME = tool 'Maven'
         //SPRING_PROFILES_ACTIVE = 'local'  
     }
-
-
+	
     stages {
         stage('checkout') {
             steps {
@@ -35,18 +33,25 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+    }
+stage('Deploy to JFrog Artifactory') {
             steps {
                 script {
-			sh "ssh root@172.31.2.55"
-                    sh "scp target/bus-booking-app-1.0-SNAPSHOT.jar root@172.31.2.55:/opt/apache-tomcat-8.5.98/webapps/"
+                    rtServer(
+                        id: "Artifact",
+                        url: "http://3.110.221.84:8081/artifactory",
+                        username: "jagruthi",
+                        password: "Jagruthi11"
+                    )
                 }
             }
         }
-    }
-post {
-    success {
-	   rtUpload (
+
+        stage('Upload') {
+            steps {
+                script {
+		// For my  undertanding rtUpload is a part of jFrog Artifactory plugin to upload artifacts to artifacts repo
+                    rtUpload (
                         serverId: 'Artifact',
                         spec: '''{
                             "files": [
@@ -56,10 +61,20 @@ post {
                                 }
                             ]
                         }'''
-                    ) 
+                    )
+                }
+            }
+        }
+
+        stage('Publish build info') {
+            steps {
+                script {
+		    // For my understanding to publish build info
+                    rtPublishBuildInfo serverId: "Artifact"
+                }
+            }
+        }
     }
-  }
-}
 
 
 
