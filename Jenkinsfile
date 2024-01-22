@@ -1,72 +1,55 @@
 pipeline {
     agent {
-        label 'king'
+        label 'slave01'
     }
 
     environment {
-        TOMCAT_HOST = '172.31.3.184'
-        TOMCAT_USER = 'root'
-        TOMCAT_DIR = '/opt/apache-tomcat-8.5.98/webapps'
-        JAR_FILE = 'bus-booking-app-1.0-SNAPSHOT.jar'  // Replace with the actual name of your JAR file
+        MAVEN_HOME = tool 'Maven'
+        //SPRING_PROFILES_ACTIVE = 'local'  
     }
+
 
     stages {
         stage('checkout') {
             steps {
                 sh 'rm -rf bus_booking'
-                sh 'git clone https://github.com/sudhasanshi/bus_booking.git'
+                sh 'git clone https://github.com/Jagruthi111/bus_booking.git'
             }
         }
 
         stage('build') {
             steps {
                 script {
-                    def mvnHome = tool 'Maven'
-                    def mvnCMD = "${mvnHome}/bin/mvn"
-                    sh "${mvnCMD} clean install"
+                     sh "${MAVEN_HOME}/bin/mvn clean package"
                 }
             }
         }
 
-        stage('Show Contents of target') {
+	stage("SonarQube analysis") {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh 'mvn clean package sonar:sonar'
+              }
+            }
+        }
+
+        stage('Run JAR') {
             steps {
                 script {
-                    // Print the contents of the target directory
-                    sh 'ls -l target'
+                    sh "java -jar target/bus-booking-app-1.0-SNAPSHOT.jar&"
+		    sleep 30
                 }
             }
         }
 
-        stage('Run JAR Locally') {
+        stage('Deploy') {
             steps {
                 script {
-                    // Run the JAR file using java -jar
-                    sh "java -jar target/${JAR_FILE}"
-                }
-            }
-        }
-
-        stage('Deploy JAR to Tomcat') {
-            steps {
-                script {
-                    // Copy JAR to Tomcat server
-                    sh "scp target/${JAR_FILE} ${TOMCAT_USER}@${TOMCAT_HOST}:${TOMCAT_DIR}/"
-
-                    // SSH into Tomcat server and restart Tomcat
-                    sh "ssh ${TOMCAT_USER}@${TOMCAT_HOST} 'bash -s' < restart-tomcat.sh"
-
-                    echo "Application deployed and Tomcat restarted"
+			sh "ssh root@172.31.2.55"
+                    sh "scp target/bus-booking-app-1.0-SNAPSHOT.jar root@172.31.2.55:/opt/apache-tomcat-8.5.98/webapps/"
                 }
             }
         }
     }
 
-    post {
-        success {
-            echo "Build, Run, and Deployment to Tomcat successful!"
-        }
-        failure {
-            echo "Build, Run, and Deployment to Tomcat failed!"
-        }
-    }
 }
