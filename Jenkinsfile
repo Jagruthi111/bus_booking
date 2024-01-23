@@ -1,5 +1,4 @@
 @Library("myLib") _
-
 pipeline {
     agent { label 'slave01'}
     stages {
@@ -28,10 +27,3 @@ pipeline {
            }
     }
 }
-// post {
-//     failure {
-//         mail to: 'jagruthisbhandare@gmail.com',
-//              subject: "Failed Pipeline: Hello-world-war",
-//              body: "Something is wrong with https://github.com/Jagruthi111/hello-world-war"
-//     }
-
