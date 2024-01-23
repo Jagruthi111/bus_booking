@@ -17,21 +17,21 @@ pipeline {
                 mavenBuild()
             }
         }
-//  stage('SonarQube Scan') {
-//                steps {
-// 			   withSonarQubeEnv('sonar'){
-// 				script {
-//                        sonarScan()
-// 				}
-//              }
-// 			}
-// }
-// }
+           stage('SonarQube Scan') {
+               steps {
+			   withSonarQubeEnv('sonar'){
+				script {
+                       sonar()
+				}
+             }
+			}
+           }
+    }
+}
 // post {
 //     failure {
 //         mail to: 'jagruthisbhandare@gmail.com',
 //              subject: "Failed Pipeline: Hello-world-war",
 //              body: "Something is wrong with https://github.com/Jagruthi111/hello-world-war"
 //     }
-}
-}
+
