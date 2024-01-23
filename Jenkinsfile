@@ -6,7 +6,7 @@ pipeline {
         stage('checkout') {
             steps {
                 script {
-                myFunction.remove('Bus-sonar-lib')
+                myFunction.remove('bus_booking')
                 myFunction.clone('https://github.com/Jagruthi111/bus_booking.git')
               }  
           }
@@ -17,16 +17,16 @@ pipeline {
                 mavenBuild()
             }
         }
- stage('SonarQube Scan') {
-               steps {
-			   withSonarQubeEnv('sonar'){
-				script {
-                       sonarScan()
-				}
-             }
-			}
-}
-}
+//  stage('SonarQube Scan') {
+//                steps {
+// 			   withSonarQubeEnv('sonar'){
+// 				script {
+//                        sonarScan()
+// 				}
+//              }
+// 			}
+// }
+// }
 // post {
 //     failure {
 //         mail to: 'jagruthisbhandare@gmail.com',
