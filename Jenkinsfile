@@ -42,14 +42,14 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-			sh "ssh root@172.31.2.55"
-                    sh "scp target/bus-booking-app-1.0-SNAPSHOT.jar root@172.31.2.55:/opt/apache-tomcat-8.5.98/webapps/"
-                }
-            }
-        }
+   //      stage('Deploy') {
+   //          steps {
+   //              script {
+			// sh "ssh root@172.31.2.55"
+   //                  sh "scp target/bus-booking-app-1.0-SNAPSHOT.jar root@172.31.2.55:/opt/apache-tomcat-8.5.98/webapps/"
+   //              }
+   //          }
+   //      }
     }
 
 }
